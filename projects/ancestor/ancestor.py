@@ -1,36 +1,44 @@
 import sys
 sys.path.append('./')
 from graph import Graph
-from util import Stack
+from util import Stack, Queue
 
+# test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
 def earliest_ancestor(ancestors, starting_node):
-    # initialize graph and a stack
+    # initialize graph and build it
     graph = Graph()
-    s = Stack()
-    # create a graph with vertices
-    for i in range(1, 12):
-        graph.add_vertex(i)
-    # add paths in ancestors as graph edged
-    for pairs in ancestors:
-        graph.add_edge(pairs[0], pairs[1])
-    # print(graph)
+    for pair in ancestors:
+        parent = pair[0]
+        child = pair[1]
+        graph.add_vertex(parent)
+        graph.add_vertex(child)
+        graph.add_edge(child, parent)
     
-    # enqueue the starting node
-    s.push(starting_node)
-    # print(starting_node, 'starting_node')
-    visited = set()
-    earliest = -1
+    # create a queue and enqueue the starting node
+    q = Queue()
+    q.enqueue([starting_node])
 
-    while s.size() > 0:
-        v = s.pop()
-        print(v, 's.pop()')
-        earliest = v
-        # print(earliest)
+    longest_path_length = 1
+    earliest_ancestor = -1
 
-        if v not in visited:
-            visited.add(v)
-            for next_vertex in graph.vertices[v]:
-                print(next_vertex, 'next_vertex')
-                s.push(next_vertex)
-    print(visited)
-    return earliest
+    while q.size() > 0:
+        path = q.dequeue()
+        # current_node is last in the path
+        current_node = path[-1]
+
+        if (len(path) >= longest_path_length and current_node < earliest_ancestor) or len(path) > longest_path_length:
+            longest_path_length = len(path)
+            earliest_ancestor = current_node
+
+        # if len(path) > longest_path_length:
+        #     longest_path_length = len(path)
+        #     earliest_ancestor = current_node
+        print(current_node)
+        neighbours = graph.vertices[current_node]
+        for ancestor in neighbours:
+            path_copy = list(path)
+            path_copy.append(ancestor)
+            q.enqueue(path_copy)
+    # print(path)
+    # print(earliest_ancestor)
+    return earliest_ancestor
