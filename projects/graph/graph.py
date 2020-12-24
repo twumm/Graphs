@@ -131,7 +131,7 @@ class Graph:
                 # Then add A PATH TO its neighbors to the back of the queue
                 for next_vertex in self.vertices[last_vertex]:
                     # COPY THE PATH
-                    copied_path = path.copy()
+                    copied_path = list(path)
                     # APPEND THE NEIGHOR TO THE BACK
                     copied_path.append(next_vertex)
                     q.enqueue(copied_path)
@@ -149,7 +149,7 @@ class Graph:
         visited = set()
         # While the queue is not empty...
         while s.size() > 0:
-            # Dequeue the first PATH eg -> [a, b, c, r, g]
+            # Pop the first PATH eg -> [a, b, c, r, g]
             path = s.pop()
             # Grab the last vertex from the PATH
             last_vertex = path[-1]
@@ -165,7 +165,7 @@ class Graph:
                 # Then add A PATH TO its neighbors to the back of the queue
                 for next_vertex in self.vertices[last_vertex]:
                     # COPY THE PATH
-                    copied_path = path.copy()
+                    copied_path = list(path)
                     # APPEND THE NEIGHOR TO THE BACK
                     copied_path.append(next_vertex)
                     s.push(copied_path)
